@@ -133,7 +133,7 @@ export async function getUserProfile() {
         const user = await account.get()
         if (!user) return null
 
-        const result = await DatabaseService.getDocument(
+        const result = await DatabaseService.getDocument<any>(
             appwriteConfig.collections.users || 'users',
             user.$id
         )

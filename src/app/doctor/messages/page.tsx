@@ -36,11 +36,14 @@ export default async function MessagesPage() {
             .in('id', patientIds)
 
         // Flatten structure for the chat interface
-        patients = patientsData?.map(p => ({
-            id: p.user.id, // We use the USER ID for messaging, not patient ID
-            full_name: p.user.full_name,
-            email: p.user.email
-        })) || []
+        patients = patientsData?.map((p: any) => {
+            const user = Array.isArray(p.user) ? p.user[0] : p.user;
+            return {
+                id: user?.id, // We use the USER ID for messaging, not patient ID
+                full_name: user?.full_name,
+                email: user?.email
+            };
+        }) || []
     }
 
     // If no specific patients found (fresh account), maybe fetch all users for demo purposes?
