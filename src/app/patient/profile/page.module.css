@@ -1,0 +1,82 @@
+.container {
+    min-height: 100vh;
+    padding: var(--spacing-xl);
+    background-color: #ffffff;
+}
+
+.header {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.header h1 {
+    color: #111827;
+    margin-bottom: var(--spacing-xs);
+}
+
+.header p {
+    color: #6b7280;
+    font-size: var(--font-size-lg);
+}
+
+.content {
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.content h2 {
+    margin-bottom: var(--spacing-md);
+    color: #111827;
+    font-size: var(--font-size-xl);
+}
+
+.profileSection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.profileField {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.profileField label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.profileField p {
+    font-size: var(--font-size-base);
+    color: #111827;
+    margin: 0;
+}
+
+.roleBadge {
+    display: inline-block;
+}
+
+.actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-md);
+    }
+
+    .profileSection {
+        grid-template-columns: 1fr;
+    }
+
+    .actions {
+        flex-direction: column;
+    }
+}

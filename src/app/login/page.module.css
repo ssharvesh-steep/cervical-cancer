@@ -1,0 +1,132 @@
+.container {
+    min-height: 100vh;
+    display: flex;
+    background-color: #ffffff;
+}
+
+.imageSection {
+    flex: 1;
+    position: relative;
+    background-image: url('/images/doctor-login-bg.png');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--spacing-2xl);
+    color: white;
+}
+
+.imageOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 80, 255, 0.6) 100%);
+    z-index: 1;
+}
+
+.imageContent {
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+}
+
+.imageContent h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.imageContent p {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    line-height: 1.6;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.formSection {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-2xl);
+    background-color: #ffffff;
+}
+
+.formWrapper {
+    width: 100%;
+    max-width: 440px;
+}
+
+.header {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.header h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: var(--spacing-sm);
+    letter-spacing: -0.02em;
+}
+
+.header p {
+    color: #666666;
+    font-size: 1.1rem;
+}
+
+/* Make sure the form inputs look good on white */
+.formSection :global(.form-input) {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
+}
+
+.formSection :global(.form-input:focus) {
+    border-color: #3b82f6;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.formSection :global(.btn-primary) {
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    font-weight: 600;
+    padding: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.formSection :global(.btn-primary:hover) {
+    background-color: #2563eb;
+    /* Blue hover */
+    transform: translateY(-1px);
+}
+
+@media (max-width: 1024px) {
+    .imageContent h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .imageSection {
+        display: none;
+        /* Hide image on mobile for simpler login, or make it a header */
+        /* Alternatively, keep it as a header:
+        flex: none;
+        height: 200px;
+        */
+    }
+
+    .formSection {
+        padding: var(--spacing-xl);
+    }
+}

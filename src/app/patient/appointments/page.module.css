@@ -1,0 +1,104 @@
+.container {
+    min-height: 100vh;
+    padding: var(--spacing-xl);
+    background-color: #ffffff;
+}
+
+.header {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.header h1 {
+    color: #111827;
+    margin-bottom: var(--spacing-xs);
+}
+
+.header p {
+    color: #6b7280;
+    font-size: var(--font-size-lg);
+}
+
+.content {
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2xl);
+}
+
+.section h2 {
+    margin-bottom: var(--spacing-lg);
+    color: #111827;
+}
+
+.appointmentsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.appointmentCard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.appointmentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.appointmentDate {
+    font-weight: var(--font-weight-semibold);
+    color: #2563eb;
+    font-size: var(--font-size-lg);
+}
+
+.appointmentTime {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+}
+
+.appointmentDetails {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.detail {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+}
+
+.detail strong {
+    color: var(--color-text-primary);
+    margin-right: var(--spacing-xs);
+}
+
+.appointmentActions {
+    display: flex;
+    gap: var(--spacing-sm);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--color-border);
+}
+
+.emptyState {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--color-text-tertiary);
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-md);
+    }
+
+    .appointmentHeader {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+    }
+}

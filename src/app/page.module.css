@@ -1,0 +1,213 @@
+.container {
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: var(--font-geist-sans), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0ea5e9;
+  /* Sky blue */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.navLinks {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.navLink {
+  text-decoration: none;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+
+.navLink:hover {
+  color: #0ea5e9;
+}
+
+.authButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.signInBtn {
+  padding: 0.6rem 1.5rem;
+  border: 1px solid #e2e8f0;
+  background: transparent;
+  color: #0ea5e9;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.signInBtn:hover {
+  border-color: #0ea5e9;
+}
+
+.signUpBtn {
+  padding: 0.6rem 1.5rem;
+  background: transparent;
+  border: 1px solid #f9a8d4;
+  /* Light pinkish border */
+  color: #db2777;
+  /* Pink text */
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.signUpBtn:hover {
+  background: #fdf2f8;
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 100px);
+  gap: 4rem;
+}
+
+.heroContent {
+  flex: 1;
+  max-width: 600px;
+}
+
+.title {
+  font-size: 4rem;
+  line-height: 1.1;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 2rem;
+}
+
+.titleHighlight {
+  color: #60a5fa;
+  /* Lighter blue */
+  display: block;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin-bottom: 3rem;
+  max-width: 500px;
+}
+
+.descriptionLink {
+  color: #0ea5e9;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.ctaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(90deg, #818cf8 0%, #60a5fa 100%);
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  /* Rounded corners but essentially rectangular */
+  text-decoration: none;
+  box-shadow: 0 10px 25px -5px rgba(96, 165, 250, 0.4);
+  transition: transform 0.2s;
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+}
+
+.heroImageContainer {
+  flex: 1.2;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.heroImage {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Decorative background shapes */
+.bgShape1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.05) 0%, transparent 70%);
+  z-index: -1;
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 1.5rem 2rem;
+  }
+
+  .navLinks {
+    display: none;
+    /* Hide nav links on smaller screens for simplicity */
+  }
+
+  .hero {
+    flex-direction: column-reverse;
+    /* Text on top on mobile, but preserving visual order usually means image top or bottom. Reference image has illustration on right. Standard mobile stack. */
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem;
+    gap: 3rem;
+    justify-content: center;
+  }
+
+  .heroContent {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

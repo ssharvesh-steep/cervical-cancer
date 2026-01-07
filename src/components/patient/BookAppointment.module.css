@@ -1,0 +1,28 @@
+.form {
+    max-width: 600px;
+}
+
+.loading {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--color-text-secondary);
+}
+
+.dateTimeRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.noDoctors {
+    text-align: center;
+    color: var(--color-text-tertiary);
+    font-style: italic;
+    margin-top: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+    .dateTimeRow {
+        grid-template-columns: 1fr;
+    }
+}

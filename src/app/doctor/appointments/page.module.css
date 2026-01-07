@@ -1,0 +1,235 @@
+.container {
+    padding-bottom: 2rem;
+}
+
+.header {
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Calendar Section */
+.calendarCard {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.calendarTitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 1.5rem;
+}
+
+/* React Calendar Overrides */
+.calendarWrapper :global(.react-calendar) {
+    width: 100%;
+    border: none;
+    font-family: inherit;
+    background: transparent;
+}
+
+.calendarWrapper :global(.react-calendar__navigation) {
+    margin-bottom: 1rem;
+}
+
+.calendarWrapper :global(.react-calendar__navigation button) {
+    min-width: 44px;
+    background: none;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.calendarWrapper :global(.react-calendar__month-view__weekdays) {
+    font-weight: 600;
+    color: #64748b;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.calendarWrapper :global(.react-calendar__tile) {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #334155;
+    border-radius: 8px;
+}
+
+.calendarWrapper :global(.react-calendar__tile--now) {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.calendarWrapper :global(.react-calendar__tile--active) {
+    background: #3b82f6 !important;
+    color: white !important;
+}
+
+.calendarWrapper :global(.react-calendar__tile:enabled:hover),
+.calendarWrapper :global(.react-calendar__tile:enabled:focus) {
+    background-color: #f1f5f9;
+}
+
+/* Appointments List Section */
+.listCard {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 2rem;
+    min-height: 600px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.listHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.dateTitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.filters {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filterBtn {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filterBtnActive {
+    background-color: #0f172a;
+    color: white;
+    border-color: #0f172a;
+}
+
+.appointmentsList {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.appointmentItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    transition: all 0.2s;
+}
+
+.appointmentItem:hover {
+    border-color: #cbd5e1;
+    background-color: #ffffff;
+}
+
+.timeInfo {
+    min-width: 100px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.duration {
+    display: block;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    font-weight: 400;
+    margin-top: 0.25rem;
+}
+
+.patientInfo {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #e2e8f0;
+}
+
+.name {
+    display: block;
+    font-weight: 600;
+    color: #0f172a;
+    margin-bottom: 0.25rem;
+}
+
+.type {
+    font-size: 0.85rem;
+    color: #64748b;
+    text-transform: capitalize;
+}
+
+.statusBadge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 2rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status_scheduled {
+    background-color: #eff6ff;
+    color: #2563eb;
+}
+
+.status_completed {
+    background-color: #f0fdf4;
+    color: #16a34a;
+}
+
+.status_cancelled {
+    background-color: #fef2f2;
+    color: #dc2626;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #94a3b8;
+}
+
+@media (max-width: 1024px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

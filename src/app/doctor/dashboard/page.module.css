@@ -1,0 +1,69 @@
+.container {
+    padding-bottom: 2rem;
+}
+
+.welcomeSection {
+    margin-bottom: 2rem;
+}
+
+.welcomeTitle {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 0.5rem;
+}
+
+.welcomeSubtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+/* Review the complexity of the grid. 
+   Top row: 4 Stat Cards
+   Middle row: 
+     - Col 1: Appointment Requests (List)
+     - Col 2: Patients (Stat) + Gender (Chart) - Might need a flex col
+     - Col 3: Today Appointments (List)
+*/
+
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.mainGrid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    align-items: start;
+}
+
+/* If screen size is smaller, adjust grid */
+@media (max-width: 1200px) {
+    .statsGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mainGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .statsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .mainGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.centerColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
