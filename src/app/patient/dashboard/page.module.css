@@ -1,0 +1,148 @@
+.container {
+    min-height: 100vh;
+    padding: var(--spacing-xl);
+    background-color: #ffffff;
+}
+
+.header {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.header h1 {
+    color: #111827;
+    margin-bottom: var(--spacing-xs);
+}
+
+.header p {
+    color: #6b7280;
+    font-size: var(--font-size-lg);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.statsCard {
+    grid-column: span 2;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+}
+
+.appointmentsCard,
+.medicationsCard,
+.actionsCard {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.statLabel {
+    font-size: var(--font-size-sm);
+    color: #6b7280;
+}
+
+.statValue {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: #2563eb;
+}
+
+.appointmentsList,
+.medicationsList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+}
+
+.appointmentItem {
+    display: flex;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: #ffffff;
+    border-radius: var(--radius-md);
+    border: 1px solid #e5e7eb;
+}
+
+.appointmentDate {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: #2563eb;
+    min-width: 100px;
+}
+
+.appointmentDetails {
+    flex: 1;
+}
+
+.appointmentType {
+    font-weight: var(--font-weight-medium);
+    color: #111827;
+    text-transform: capitalize;
+}
+
+.appointmentDoctor {
+    font-size: var(--font-size-sm);
+    color: #6b7280;
+    margin-top: var(--spacing-xs);
+}
+
+.medicationItem {
+    padding: var(--spacing-md);
+    background-color: #ffffff;
+    border-radius: var(--radius-md);
+    border: 1px solid #e5e7eb;
+}
+
+.medicationName {
+    font-weight: var(--font-weight-medium);
+    color: #111827;
+    margin-bottom: var(--spacing-xs);
+}
+
+.medicationDosage {
+    font-size: var(--font-size-sm);
+    color: #6b7280;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+}
+
+.emptyState {
+    color: #9ca3af;
+    font-style: italic;
+    text-align: center;
+    padding: var(--spacing-lg);
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: var(--spacing-md);
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .statsCard {
+        grid-column: span 1;
+    }
+}

@@ -1,36 +1,170 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cervical Cancer Care PWA
+
+A comprehensive Progressive Web Application for cervical cancer patient management and care, supporting both doctors and patients with role-based access control.
+
+## Features
+
+### For Patients
+- 📊 Personal health dashboard
+- 🧪 Screening and diagnosis tracking
+- 💊 Treatment monitoring and medication reminders
+- 📝 Symptom logging
+- 📅 Appointment booking and management
+- 📚 Educational content and resources
+- 💬 Secure messaging with doctors
+
+### For Doctors
+- 🩺 Patient management dashboard
+- 📋 Complete patient medical records
+- 🧠 Clinical decision support
+- 📆 Appointment scheduling
+- 📈 Analytics and reporting
+- 🔍 Patient progress tracking
+
+### Technical Features
+- ✅ Progressive Web App (PWA) - installable on mobile and desktop
+- 🔒 Secure authentication with role-based access
+- 📱 Responsive design for all devices
+- 🌐 Offline support with data synchronization
+- 🔔 Push notifications
+- 🔐 HIPAA/GDPR-style data protection
+- 📊 Real-time data updates
+
+## Tech Stack
+
+- **Frontend**: Next.js 14 (App Router), TypeScript, React
+- **Backend**: Supabase (PostgreSQL, Authentication, Storage, Real-time)
+- **Styling**: Vanilla CSS with CSS Modules
+- **PWA**: next-pwa for service workers and offline support
+- **Deployment**: Vercel (recommended)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ and npm
+- Supabase account and project
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd cervical_cancer_app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Set up environment variables:
+Create a `.env.local` file in the root directory:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://phhzpgorkercvfdbjdfc.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_KOnv5KWV_iwweY-Zq6HwNQ_oIO7DW9a
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Set up the database:
+- Go to your Supabase project dashboard
+- Navigate to the SQL Editor
+- Copy and paste the contents of `database/setup.sql`
+- Run the script to create all tables, policies, and functions
 
-## Learn More
+5. Run the development server:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+6. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Building for Production
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run build
+npm start
+```
 
-## Deploy on Vercel
+## Database Setup
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The database schema includes:
+- User management with role-based access (doctor/patient)
+- Patient profiles and medical history
+- Screening records and diagnoses
+- Treatment plans and sessions
+- Medications and symptom logs
+- Appointments and messaging
+- Educational content
+- Audit logs for compliance
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+All tables have Row Level Security (RLS) policies to ensure data privacy and security.
+
+## PWA Installation
+
+### On Mobile (Android/iOS)
+1. Open the app in your mobile browser
+2. Tap the browser menu
+3. Select "Add to Home Screen" or "Install App"
+4. Follow the prompts
+
+### On Desktop (Chrome/Edge)
+1. Open the app in your browser
+2. Click the install icon in the address bar
+3. Click "Install"
+
+## Project Structure
+
+```
+cervical_cancer_app/
+├── public/              # Static assets and PWA files
+│   ├── icons/          # App icons
+│   └── manifest.json   # PWA manifest
+├── src/
+│   ├── app/            # Next.js app router pages
+│   │   ├── patient/    # Patient module pages
+│   │   ├── doctor/     # Doctor module pages
+│   │   ├── login/      # Authentication pages
+│   │   └── register/
+│   ├── components/     # React components
+│   │   ├── auth/       # Authentication components
+│   │   ├── patient/    # Patient-specific components
+│   │   ├── doctor/     # Doctor-specific components
+│   │   └── shared/     # Shared components
+│   ├── lib/            # Utility libraries
+│   │   ├── supabase/   # Supabase client configuration
+│   │   └── auth.ts     # Authentication utilities
+│   ├── styles/         # Global styles and CSS modules
+│   ├── types/          # TypeScript type definitions
+│   └── middleware.ts   # Next.js middleware for auth
+├── database/           # Database setup scripts
+│   └── setup.sql       # Complete database schema
+└── next.config.js      # Next.js and PWA configuration
+```
+
+## Security
+
+- All API requests are authenticated using Supabase JWT tokens
+- Row Level Security (RLS) policies enforce data access control
+- Passwords are hashed using bcrypt
+- HTTPS enforced in production
+- Audit logs track all doctor actions on patient data
+
+## Contributing
+
+This is a medical application. Please ensure all contributions:
+1. Follow HIPAA/GDPR best practices
+2. Include proper error handling
+3. Add appropriate tests
+4. Update documentation
+
+## License
+
+[Your License Here]
+
+## Support
+
+For issues or questions, please contact [your contact information]
+
+## Disclaimer
+
+This application is designed to assist in cervical cancer care management but should not replace professional medical advice. Always consult with qualified healthcare providers for medical decisions.

@@ -1,0 +1,113 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.statusCard,
+.errorCard,
+.infoCard,
+.collectionsCard {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.statusCard h2 {
+    margin-top: 0;
+    color: #555;
+    font-size: 1.2rem;
+}
+
+.loading {
+    color: #0066cc;
+    font-weight: 500;
+}
+
+.success {
+    color: #00aa00;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.error {
+    color: #cc0000;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.errorCard {
+    background: #fff5f5;
+    border-left: 4px solid #cc0000;
+}
+
+.errorCard h3 {
+    color: #cc0000;
+    margin-top: 0;
+}
+
+.errorCard pre {
+    background: white;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.9rem;
+}
+
+.infoCard pre {
+    background: #f5f5f5;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+}
+
+.collectionsCard ul {
+    list-style: none;
+    padding: 0;
+}
+
+.collectionsCard li {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: #f9f9f9;
+    border-radius: 4px;
+    border-left: 3px solid #0066cc;
+}
+
+.collectionsCard li strong {
+    color: #333;
+}
+
+.collectionsCard li small {
+    color: #666;
+    font-family: monospace;
+}
+
+.retryButton {
+    background: #0066cc;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.retryButton:hover {
+    background: #0052a3;
+}
+
+.retryButton:active {
+    transform: scale(0.98);
+}
