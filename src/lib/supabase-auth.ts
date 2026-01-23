@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/client'
 
-type UserRole = 'doctor' | 'patient'
+type UserRole = 'doctor' | 'patient' | 'admin'
 
 export interface SignUpData {
     email: string
@@ -35,8 +35,9 @@ export async function signUp(data: SignUpData) {
         if (authError) throw authError
 
         return { user: authData.user }
-    } catch (error: any) {
-        throw new Error(error.message || 'Failed to sign up')
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to sign up'
+        throw new Error(message)
     }
 }
 
@@ -52,8 +53,9 @@ export async function signIn(data: SignInData) {
         if (error) throw error
 
         return { user: authData.user, session: authData.session }
-    } catch (error: any) {
-        throw new Error(error.message || 'Failed to sign in')
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to sign in'
+        throw new Error(message)
     }
 }
 
@@ -63,8 +65,9 @@ export async function signOut() {
     try {
         const { error } = await supabase.auth.signOut()
         if (error) throw error
-    } catch (error: any) {
-        throw new Error(error.message || 'Failed to sign out')
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to sign out'
+        throw new Error(message)
     }
 }
 
@@ -115,8 +118,9 @@ export async function getUserProfile() {
 
         if (error) throw error
         return data
-    } catch (error: any) {
-        throw new Error(error.message || 'Failed to get user profile')
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to get user profile'
+        throw new Error(message)
     }
 }
 
@@ -171,6 +175,29 @@ export async function getDoctorProfile() {
 
         if (error) throw error
         if (!userProfile || userProfile.role !== 'doctor') return null
+
+        return userProfile
+    } catch (error) {
+        return null
+    }
+}
+
+export async function getAdminProfile() {
+    const supabase = createClient()
+
+    try {
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return null
+
+        // Get user profile
+        const { data: userProfile, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', user.id)
+            .single()
+
+        if (error) throw error
+        if (!userProfile || userProfile.role !== 'admin') return null
 
         return userProfile
     } catch (error) {

@@ -28,7 +28,7 @@ export default async function DoctorDashboard() {
         return (
             <div className={styles.container}>
                 <div className="alert alert-error" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '1rem' }}>
-                    <p>User profile not found. This can happen if the account setup didn't complete.</p>
+                    <p>User profile not found. This can happen if the account setup didn&apos;t complete.</p>
                     <form action="/api/auth/sync" method="POST">
                         <SyncProfileButton />
                     </form>
@@ -54,13 +54,43 @@ export default async function DoctorDashboard() {
         .eq('doctor_id', user.id)
         .gte('appointment_date', new Date().toISOString())
         .order('appointment_date', { ascending: true })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .limit(10) as { data: any[] | null }
 
-    // Total Patients Count
-    const { count: patientCount } = await supabase
-        .from('users')
-        .select('*', { count: 'exact', head: true })
-        .eq('role', 'patient')
+    // Get connected patients IDs
+    const { data: connectedPatients } = await supabase
+        .from('patient_doctors')
+        .select('patient_id')
+        .eq('doctor_id', user.id)
+
+    const connectedPatientIds = connectedPatients?.map(p => p.patient_id) || []
+
+    let patientCount = 0
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let recentUsers: any[] = []
+
+    if (connectedPatientIds.length > 0) {
+        // Get user_ids from patients table for connected patients
+        const { data: connectedPatientRecords } = await supabase
+            .from('patients')
+            .select('user_id')
+            .in('id', connectedPatientIds)
+
+        const connectedUserIds = connectedPatientRecords?.map(p => p.user_id) || []
+
+        // Total Patients Count (only connected)
+        patientCount = connectedPatientIds.length
+
+        // Recent Patients (only connected)
+        const { data: users } = await supabase
+            .from('users')
+            .select('*')
+            .in('id', connectedUserIds)
+            .order('created_at', { ascending: false })
+            .limit(10)
+
+        recentUsers = users || []
+    }
 
     // Total Appointments Count
     const { count: totalAppointments } = await supabase
@@ -90,23 +120,15 @@ export default async function DoctorDashboard() {
         .eq('doctor_id', user.id)
         .eq('status', 'pending')
         .order('created_at', { ascending: false })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .limit(5) as { data: any[] | null }
 
-    // Recent Patients (Just fetching recent appointments/patients for now)
-    // Recent Patients (Fetching from users table to ensure all registered patients show up)
-    const { data: recentUsers } = await supabase
-        .from('users')
-        .select('*')
-        .eq('role', 'patient')
-        .order('created_at', { ascending: false })
-        .limit(10)
-
-    console.log('DEBUG: Recent Users Found:', recentUsers?.length)
-    if (recentUsers && recentUsers.length > 0) {
+    console.log('DEBUG: Recent Users Found:', recentUsers.length)
+    if (recentUsers.length > 0) {
         console.log('DEBUG: First User:', recentUsers[0])
     }
 
-    const recentPatients = recentUsers?.map(user => ({
+    const recentPatients = recentUsers.map(user => ({
         id: user.id, // Using user ID as the key
         created_at: user.created_at || new Date().toISOString(),
         gender: 'Female', // Default/Placeholder as simple registration might not have this
@@ -115,7 +137,7 @@ export default async function DoctorDashboard() {
             email: user.email,
             // Add other user fields if needed
         }
-    })) || []
+    }))
 
 
     return (

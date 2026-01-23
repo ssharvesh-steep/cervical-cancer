@@ -4,9 +4,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn, getUserRole } from '@/lib/supabase-auth'
 import styles from './LoginForm.module.css'
+import { useLanguage } from '@/context/LanguageContext'
 
 export default function LoginForm() {
     const router = useRouter()
+    const { t } = useLanguage()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
@@ -32,7 +34,7 @@ export default function LoginForm() {
                 window.location.href = '/patient/dashboard'
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to sign in')
+            setError(err instanceof Error ? err.message : t('auth.errors.signInFailed'))
             setLoading(false)
         }
     }
@@ -41,7 +43,7 @@ export default function LoginForm() {
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className="form-group">
                 <label htmlFor="email" className="form-label">
-                    Email Address
+                    {t('auth.email')}
                 </label>
                 <input
                     id="email"
@@ -57,7 +59,7 @@ export default function LoginForm() {
 
             <div className="form-group">
                 <label htmlFor="password" className="form-label">
-                    Password
+                    {t('auth.password')}
                 </label>
                 <input
                     id="password"
@@ -65,7 +67,7 @@ export default function LoginForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="form-input"
-                    placeholder="Enter your password"
+                    placeholder={t('auth.password')}
                     required
                     disabled={loading}
                     minLength={6}
@@ -87,19 +89,19 @@ export default function LoginForm() {
                 {loading ? (
                     <>
                         <span className="spinner"></span>
-                        Signing in...
+                        {t('auth.buttons.signingIn')}
                     </>
                 ) : (
-                    'Sign In'
+                    t('auth.buttons.signIn')
                 )}
             </button>
 
             <div className={styles.links}>
                 <a href="/auth/forgot-password" className={styles.link}>
-                    Forgot password?
+                    {t('auth.forgotPassword')}
                 </a>
                 <a href="/register" className={styles.link}>
-                    Create an account
+                    {t('auth.createAccount')}
                 </a>
             </div>
         </form>

@@ -41,6 +41,7 @@ export default function AppointmentsClient({ initialAppointments }: { initialApp
         return apt.status === filter
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleDateChange = (value: any) => {
         setDate(value as Date)
     }

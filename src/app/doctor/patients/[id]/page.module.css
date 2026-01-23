@@ -84,3 +84,78 @@
 .roleBadge {
     display: inline-flex;
 }
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .headerActions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .headerActions a,
+    .headerActions button {
+        width: 100%;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .card {
+        padding: 1rem;
+    }
+
+    .card h2 {
+        font-size: 1.125rem;
+    }
+
+    .profileField p {
+        font-size: 1rem;
+    }
+
+    /* Make tables scroll horizontally on mobile */
+    .card :global(table) {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        white-space: nowrap;
+    }
+
+    .card :global(thead),
+    .card :global(tbody),
+    .card :global(tr) {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+}
+
+@media (max-width: 425px) {
+    .container {
+        padding: 0.75rem;
+    }
+
+    .card {
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+    }
+
+    .profileSection {
+        gap: 1rem;
+    }
+}

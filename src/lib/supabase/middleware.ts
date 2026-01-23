@@ -22,6 +22,7 @@ export async function updateSession(request: NextRequest) {
                 getAll() {
                     return request.cookies.getAll()
                 },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 setAll(cookiesToSet: { name: string, value: string, options: any }[]) {
                     cookiesToSet.forEach(({ name, value }) =>
                         request.cookies.set(name, value)
@@ -55,6 +56,21 @@ export async function updateSession(request: NextRequest) {
         const url = request.nextUrl.clone()
         url.pathname = '/login'
         return NextResponse.redirect(url)
+    }
+
+    // Protect admin routes
+    if (request.nextUrl.pathname.startsWith('/admin') && user) {
+        const { data: userRole } = await supabase
+            .from('users')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+
+        if (!userRole || userRole.role !== 'admin') {
+            const url = request.nextUrl.clone()
+            url.pathname = '/login' // Or a 403 page
+            return NextResponse.redirect(url)
+        }
     }
 
     // IMPORTANT: You *must* return the supabaseResponse object as it is. If you're

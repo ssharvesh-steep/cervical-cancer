@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import styles from './page.module.css'
+import Link from 'next/link'
+import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 export default async function DoctorPatientsPage() {
     const supabase = await createClient()
@@ -10,7 +12,45 @@ export default async function DoctorPatientsPage() {
         redirect('/login')
     }
 
-    // Get ALL patients (fetching from users table to ensure all registered patients show up)
+    // Get only patients who have connected via QR code (patient_doctors table only)
+    const { data: connectedPatients } = await supabase
+        .from('patient_doctors')
+        .select('patient_id')
+        .eq('doctor_id', authUser.id)
+
+    // Get unique patient IDs from QR code connections only
+    const allConnectedPatientIds = Array.from(new Set(connectedPatients?.map(c => c.patient_id) || []))
+
+    // If no connected patients, return empty list
+    if (allConnectedPatientIds.length === 0) {
+        return (
+            <div className={styles.container}>
+                <header className={styles.header}>
+                    <h1>My Patients</h1>
+                    <p>Manage your patient records</p>
+                </header>
+                <div className={styles.emptyState}>
+                    <p>No connected patients yet. Patients will appear here once they scan your QR code to connect with you.</p>
+                </div>
+                <div style={{ display: 'none' }}>
+                    <RealtimeRefresher table="patient_doctors" />
+                </div>
+            </div>
+        )
+    }
+
+    // Get patient records for connected patients
+    const { data: patientRecords } = await supabase
+        .from('patients')
+        .select(`
+            id,
+            user_id,
+            date_of_birth
+        `)
+        .in('id', allConnectedPatientIds)
+
+    // Get user details for these patients
+    const patientUserIds = patientRecords?.map(p => p.user_id) || []
     const { data: allPatients } = await supabase
         .from('users')
         .select(`
@@ -20,48 +60,21 @@ export default async function DoctorPatientsPage() {
             phone,
             created_at
         `)
-        .eq('role', 'patient')
+        .in('id', patientUserIds)
         .order('created_at', { ascending: false })
 
     // Get appointment counts for each patient
     const patientsWithAppointments = await Promise.all(
         (allPatients || []).map(async (user) => {
-            // Check for appointments
-            const { data: appointments } = await supabase
-                .from('appointments')
-                .select('appointment_date')
-                .eq('patient_id', user.id) // Assuming patient_id in appointments refers to the user.id or there's a join. 
-            // Actually, patient_id in appointments usually refers to the PATIENT table ID, not USER ID.
-            // However, if we don't have a patient record, they can't have appointments.
-            // We need to find if there is a patient record for this user first.
-
-            // Let's try to find their patient record first
+            // Find the patient record for this user
             const { data: patientRecord } = await supabase
                 .from('patients')
                 .select('id, date_of_birth')
                 .eq('user_id', user.id)
                 .single()
 
-            let lastAppointment = null
-            let appointmentCount = 0
-
-            if (patientRecord) {
-                const { data: appts } = await supabase
-                    .from('appointments')
-                    .select('appointment_date')
-                    .eq('patient_id', patientRecord.id)
-                    .eq('doctor_id', authUser.id)
-                    .order('appointment_date', { ascending: false })
-                    .limit(1)
-
-                if (appts && appts.length > 0) {
-                    lastAppointment = appts[0].appointment_date
-                    appointmentCount = 1 // Simplified for check
-                }
-            }
-
             return {
-                id: patientRecord?.id || user.id, // Fallback to user ID if no patient record
+                id: patientRecord?.id || user.id,
                 user: {
                     id: user.id,
                     full_name: user.full_name,
@@ -69,8 +82,8 @@ export default async function DoctorPatientsPage() {
                     phone: user.phone
                 },
                 date_of_birth: patientRecord?.date_of_birth || null,
-                lastAppointment: lastAppointment,
-                hasAppointment: appointmentCount > 0
+                lastAppointment: null,
+                hasAppointment: false
             }
         })
     )
@@ -113,12 +126,8 @@ export default async function DoctorPatientsPage() {
                                         </div>
                                     )}
                                     <div className={styles.detail}>
-                                        <span className={styles.label}>Last Visit:</span>
-                                        <span>
-                                            {patient.lastAppointment
-                                                ? new Date(patient.lastAppointment).toLocaleDateString()
-                                                : 'No appointments yet'}
-                                        </span>
+                                        <span className={styles.label}>Connection:</span>
+                                        <span>Connected via QR Code</span>
                                     </div>
                                 </div>
 
@@ -142,6 +151,10 @@ export default async function DoctorPatientsPage() {
                         <p>No patients registered yet. Patients will appear here when they create accounts.</p>
                     </div>
                 )}
+            </div>
+
+            <div style={{ display: 'none' }}>
+                <RealtimeRefresher table="patient_doctors" />
             </div>
         </div>
     )

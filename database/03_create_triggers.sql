@@ -18,8 +18,6 @@ BEGIN
     
     RETURN NEW;
 END;
-    RETURN NEW;
-END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- Trigger on auth.users

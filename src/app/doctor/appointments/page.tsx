@@ -27,6 +27,7 @@ export default async function DoctorAppointmentsPage() {
             )
         `)
         .eq('doctor_id', user.id)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .order('appointment_date', { ascending: true }) as { data: any[] | null }
 
     return (

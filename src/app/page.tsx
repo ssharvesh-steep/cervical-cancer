@@ -1,10 +1,15 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import styles from './page.module.css'
 import { ArrowRight } from 'lucide-react'
 import Navbar from '@/components/landing/Navbar'
+import { useLanguage } from '@/context/LanguageContext'
 
 export default function HomePage() {
+    const { t } = useLanguage()
+
     return (
         <div className={styles.container}>
             <div className={styles.bgShape1}></div>
@@ -16,17 +21,14 @@ export default function HomePage() {
             <main className={styles.hero}>
                 <div className={styles.heroContent}>
                     <h1 className={styles.title}>
-                        Healthcare
-                        <span className={styles.titleHighlight}>Unlocked</span>
+                        {t('landing.heroTitle')}
                     </h1>
                     <p className={styles.description}>
-                        Whether you are at work, home, traveling, or with family.
-                        We ensure that you have access to screening records,
-                        expert doctor consultations, and continuous health
-                        monitoring whenever you need it. Your health is our priority. <Link href="/register" className={styles.descriptionLink}>Get Started</Link>
+                        {t('landing.heroSubtitle')}{' '}
+                        <Link href="/register" className={styles.descriptionLink}>{t('landing.getStarted')}</Link>
                     </p>
                     <Link href="/register" className={styles.ctaButton}>
-                        LEARN MORE
+                        {t('landing.learnMore')}
                         <ArrowRight size={20} />
                     </Link>
                 </div>

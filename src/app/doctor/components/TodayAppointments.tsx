@@ -5,12 +5,15 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Edit2 } from 'lucide-react'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function TodayAppointments({ appointments }: { appointments: any[] }) {
     const supabase = createClient()
     const router = useRouter()
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [selectedApt, setSelectedApt] = React.useState<any>(null)
     const [scheduleTime, setScheduleTime] = React.useState('')
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleEdit = (apt: any) => {
         setSelectedApt(apt)
         // Default to current date/time

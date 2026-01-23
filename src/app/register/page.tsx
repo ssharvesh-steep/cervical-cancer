@@ -1,26 +1,30 @@
+'use client'
+
 import RegisterForm from '@/components/auth/RegisterForm'
 import styles from './page.module.css'
-
-export const metadata = {
-    title: 'Create Account - Cervical Cancer Care',
-    description: 'Create your account to get started',
-}
+import { useLanguage } from '@/context/LanguageContext'
+import LanguageSwitcher from '@/components/shared/LanguageSwitcher'
 
 export default function RegisterPage() {
+    const { t } = useLanguage()
+
     return (
         <div className={styles.container}>
+            <div style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 1000 }}>
+                <LanguageSwitcher />
+            </div>
             <div className={styles.imageSection}>
                 <div className={styles.imageOverlay} />
                 <div className={styles.imageContent}>
-                    <h2>Advancing Cervical Cancer Care</h2>
-                    <p>Join our network of healthcare professionals dedicated to early detection and prevention.</p>
+                    <h2>{t('landing.heroTitle')}</h2>
+                    <p>{t('landing.heroSubtitle').substring(0, 100)}...</p>
                 </div>
             </div>
             <div className={styles.formSection}>
                 <div className={styles.formWrapper}>
                     <div className={styles.header}>
-                        <h1>Create Account</h1>
-                        <p>Join our cervical cancer care platform</p>
+                        <h1>{t('auth.createAccount')}</h1>
+                        <p>{t('auth.createAccountSubtitle')}</p>
                     </div>
                     <RegisterForm />
                 </div>

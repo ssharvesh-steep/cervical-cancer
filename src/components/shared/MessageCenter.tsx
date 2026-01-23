@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { Trash2 } from 'lucide-react'
 import styles from './MessageCenter.module.css'
 
 interface Message {
@@ -29,6 +30,8 @@ export default function MessageCenter({ currentUserId, recipientId, recipientNam
     const [newMessage, setNewMessage] = useState('')
     const [loading, setLoading] = useState(true)
     const [sending, setSending] = useState(false)
+    const [showClearDialog, setShowClearDialog] = useState(false)
+    const [clearing, setClearing] = useState(false)
     const messagesEndRef = useRef<HTMLDivElement>(null)
     const supabase = createClient()
 
@@ -71,6 +74,7 @@ export default function MessageCenter({ currentUserId, recipientId, recipientNam
         sender:users!messages_sender_id_fkey(full_name, role)
       `)
             .or(`and(sender_id.eq.${currentUserId},receiver_id.eq.${recipientId}),and(sender_id.eq.${recipientId},receiver_id.eq.${currentUserId})`)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .order('created_at', { ascending: true }) as { data: any[] | null, error: any }
 
         if (data) {
@@ -141,6 +145,39 @@ export default function MessageCenter({ currentUserId, recipientId, recipientNam
         setSending(false)
     }
 
+    const handleClearMessages = async () => {
+        if (!recipientId) return
+
+        setClearing(true)
+        setShowClearDialog(false)
+
+        // Store current messages for rollback
+        const previousMessages = [...messages]
+
+        // Optimistically clear UI
+        setMessages([])
+
+        try {
+            // Delete all messages between current user and recipient
+            const { error } = await supabase
+                .from('messages')
+                .delete()
+                .or(`and(sender_id.eq.${currentUserId},receiver_id.eq.${recipientId}),and(sender_id.eq.${recipientId},receiver_id.eq.${currentUserId})`)
+
+            if (error) {
+                throw error
+            }
+        } catch (error) {
+            console.error('Error clearing messages:', error)
+            // Rollback on error
+            setMessages(previousMessages)
+            const message = error instanceof Error ? error.message : 'Unknown error'
+            alert('Failed to clear messages: ' + message)
+        } finally {
+            setClearing(false)
+        }
+    }
+
     if (!recipientId) {
         return (
             <div className={styles.emptyState}>
@@ -153,6 +190,16 @@ export default function MessageCenter({ currentUserId, recipientId, recipientNam
         <div className={styles.container}>
             <div className={styles.header}>
                 <h3>{recipientName || 'Messages'}</h3>
+                {messages.length > 0 && (
+                    <button
+                        onClick={() => setShowClearDialog(true)}
+                        className={styles.clearButton}
+                        title="Clear all messages"
+                        disabled={clearing}
+                    >
+                        <Trash2 size={18} />
+                    </button>
+                )}
             </div>
 
             <div className={styles.messagesContainer}>
@@ -206,6 +253,31 @@ export default function MessageCenter({ currentUserId, recipientId, recipientNam
                     {sending ? 'Sending...' : 'Send'}
                 </button>
             </form>
+
+            {/* Confirmation Dialog */}
+            {showClearDialog && (
+                <div className={styles.dialogOverlay} onClick={() => setShowClearDialog(false)}>
+                    <div className={styles.dialogBox} onClick={(e) => e.stopPropagation()}>
+                        <h3>Clear All Messages?</h3>
+                        <p>This will permanently delete all messages in this conversation. This action cannot be undone.</p>
+                        <div className={styles.dialogButtons}>
+                            <button
+                                onClick={() => setShowClearDialog(false)}
+                                className={styles.cancelButton}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleClearMessages}
+                                className={styles.confirmButton}
+                                disabled={clearing}
+                            >
+                                {clearing ? 'Clearing...' : 'Clear Messages'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

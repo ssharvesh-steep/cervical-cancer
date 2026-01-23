@@ -9,7 +9,10 @@ export default function OfflineIndicator() {
 
     useEffect(() => {
         // Set initial state
-        setIsOnline(navigator.onLine);
+        if (typeof navigator !== 'undefined' && navigator.onLine !== isOnline) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setIsOnline(navigator.onLine);
+        }
 
         const handleOnline = () => {
             setIsOnline(true);
@@ -37,8 +40,8 @@ export default function OfflineIndicator() {
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 animate-slide-down">
             <div
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg ${isOnline
-                        ? 'bg-success-50 text-success-700 border border-success-200'
-                        : 'bg-warning-50 text-warning-700 border border-warning-200'
+                    ? 'bg-success-50 text-success-700 border border-success-200'
+                    : 'bg-warning-50 text-warning-700 border border-warning-200'
                     }`}
             >
                 {isOnline ? (
@@ -49,7 +52,7 @@ export default function OfflineIndicator() {
                 ) : (
                     <>
                         <WifiOff className="w-5 h-5" />
-                        <span className="font-medium">You're offline</span>
+                        <span className="font-medium">You&apos;re offline</span>
                     </>
                 )}
             </div>

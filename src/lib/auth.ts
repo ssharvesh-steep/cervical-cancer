@@ -54,8 +54,9 @@ export async function signUp(data: SignUpData) {
         }
 
         return { user }
-    } catch (error: any) {
-        throw new Error(error.message || 'Failed to sign up')
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to sign up'
+        throw new Error(message)
     }
 }
 
@@ -69,16 +70,18 @@ export async function signIn(data: SignInData) {
         const user = await account.get()
 
         return { user, session }
-    } catch (error: any) {
-        throw new Error(error.message || 'Failed to sign in')
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to sign in'
+        throw new Error(message)
     }
 }
 
 export async function signOut() {
     try {
         await account.deleteSession('current')
-    } catch (error: any) {
-        throw new Error(error.message || 'Failed to sign out')
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to sign out'
+        throw new Error(message)
     }
 }
 
@@ -88,16 +91,18 @@ export async function resetPassword(email: string) {
             email,
             `${window.location.origin}/auth/reset-password`
         )
-    } catch (error: any) {
-        throw new Error(error.message || 'Failed to send reset email')
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to send reset email'
+        throw new Error(message)
     }
 }
 
 export async function updatePassword(newPassword: string, oldPassword: string) {
     try {
         await account.updatePassword(newPassword, oldPassword)
-    } catch (error: any) {
-        throw new Error(error.message || 'Failed to update password')
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to update password'
+        throw new Error(message)
     }
 }
 
@@ -133,6 +138,7 @@ export async function getUserProfile() {
         const user = await account.get()
         if (!user) return null
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result = await DatabaseService.getDocument<any>(
             appwriteConfig.collections.users || 'users',
             user.$id
@@ -143,8 +149,9 @@ export async function getUserProfile() {
         }
 
         return result.data
-    } catch (error: any) {
-        throw new Error(error.message || 'Failed to get user profile')
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to get user profile'
+        throw new Error(message)
     }
 }
 

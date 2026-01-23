@@ -20,18 +20,36 @@ export async function GET() {
         })
     }
 
-    // Generate 50 mock patients
-    const firstNames = ['James', 'Mary', 'Robert', 'Patricia', 'John', 'Jennifer', 'Michael', 'Linda', 'David', 'Elizabeth', 'William', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica', 'Thomas', 'Sarah', 'Charles', 'Karen'];
-    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin'];
+    // Generate 50 mock patients with diverse names (including Tamil names)
+    const firstNames = [
+        'Priya', 'Lakshmi', 'Meera', 'Kavitha', 'Anjali', 'Divya', 'Shanti', 'Malini', 'Rani', 'Kamala',
+        'Mary', 'Jennifer', 'Sarah', 'Patricia', 'Linda', 'Elizabeth', 'Barbara', 'Susan', 'Jessica', 'Karen',
+        'Deepa', 'Sushma', 'Radha', 'Geetha', 'Nithya', 'Vidya', 'Uma', 'Latha', 'Revathi', 'Swathi'
+    ];
+    const lastNames = [
+        'Kumar', 'Devi', 'Lakshmi', 'Raman', 'Krishnan', 'Subramanian', 'Iyer', 'Nair', 'Menon', 'Pillai',
+        'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
+        'Sharma', 'Patel', 'Reddy', 'Rao', 'Naidu', 'Murthy', 'Srinivasan', 'Venkatesh', 'Raghavan', 'Chandran'
+    ];
 
     const mockPatients = [];
+    const bloodGroups = ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'];
+    
     for (let i = 0; i < 50; i++) {
         const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
         const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const birthYear = 1970 + Math.floor(Math.random() * 40); // Ages 25-65
+        const birthMonth = Math.floor(Math.random() * 12);
+        const birthDay = Math.floor(Math.random() * 28) + 1;
+        
         mockPatients.push({
             name: `${firstName} ${lastName}`,
             email: `patient.test.${i + 1}@example.com`, // Ensure unique emails
-            phone: `555-0${100 + i}`
+            phone: `+91-${9000000000 + i}`, // Indian phone format
+            dateOfBirth: new Date(birthYear, birthMonth, birthDay).toISOString().split('T')[0],
+            bloodGroup: bloodGroups[Math.floor(Math.random() * bloodGroups.length)],
+            emergencyContact: `Emergency Contact ${i + 1}`,
+            emergencyPhone: `+91-${8000000000 + i}`
         });
     }
 
@@ -71,19 +89,43 @@ export async function GET() {
                 // Let's verify if user exists in public.users first (give it a ms if trigger based) could be race condition
                 // But simplified: just try inserting into patients. using user.user.id
 
-                const { error: patientError } = await supabaseAdmin
-                    .from('patients')
-                    .insert({
-                        user_id: user.user.id,
-                        date_of_birth: '1990-01-01', // Default DOB
-                        gender: 'Female', // As per context
-                        phone: patient.phone,
-                        blood_group: 'O+',
-                        address: '123 Seed Street'
-                    })
+                // Wait a bit for trigger to create user record
+                await new Promise(resolve => setTimeout(resolve, 100))
 
-                if (patientError) {
-                    console.error('Error creating patient record:', patientError)
+                // Update user phone in users table
+                await supabaseAdmin
+                    .from('users')
+                    .update({ phone: patient.phone })
+                    .eq('id', user.user.id)
+
+                // Get patient record (should be created by trigger, but ensure it exists)
+                const { data: patientRecord } = await supabaseAdmin
+                    .from('patients')
+                    .select('id')
+                    .eq('user_id', user.user.id)
+                    .single()
+
+                let patientId = patientRecord?.id
+
+                // If patient record doesn't exist, create it
+                if (!patientId) {
+                    const { data: newPatient, error: patientError } = await supabaseAdmin
+                        .from('patients')
+                        .insert({
+                            user_id: user.user.id,
+                            date_of_birth: patient.dateOfBirth || new Date(1990 + Math.floor(Math.random() * 30), Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
+                            blood_group: patient.bloodGroup || ['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'][Math.floor(Math.random() * 8)],
+                            emergency_contact_name: patient.emergencyContact || `Emergency Contact`,
+                            emergency_contact_phone: patient.emergencyPhone || `+91-${8000000000 + Math.floor(Math.random() * 1000)}`
+                        })
+                        .select('id')
+                        .single()
+
+                    if (newPatient) {
+                        patientId = newPatient.id
+                    } else if (patientError) {
+                        console.error('Error creating patient record:', patientError)
+                    }
                 }
             }
         }
@@ -117,34 +159,109 @@ export async function GET() {
     const { data: existingDoctors } = await supabaseAdmin.from('users').select('id').eq('role', 'doctor').limit(1)
     const allDoctorIds = [...createdDoctors.map(d => d.id), ...existingDoctors?.map(d => d.id) || []]
 
-    // We need patient IDs. Since triggers might create public.users/patients, let's fetch them from public schema
-    const { data: allPatientRecords } = await supabaseAdmin.from('users').select('id').eq('role', 'patient')
+    // Get all patient records from patients table (not users table)
+    const { data: allPatientRecords } = await supabaseAdmin
+        .from('patients')
+        .select('id, user_id')
 
-    let appointmentsCreated = 0
+    let symptomsCreated = 0
+    let screeningsCreated = 0
+    let reportsCreated = 0
 
     if (allDoctorIds.length > 0 && allPatientRecords && allPatientRecords.length > 0) {
-        const appointmentTypes = ['General Checkup', 'Follow-up', 'Consultation', 'Screening']
-
         for (const patient of allPatientRecords) {
-            // Randomly decide to give this patient an appointment
-            if (Math.random() > 0.3) {
-                const randomDoctorId = allDoctorIds[Math.floor(Math.random() * allDoctorIds.length)]
-                const randomType = appointmentTypes[Math.floor(Math.random() * appointmentTypes.length)]
+            // Don't create fake appointments - only QR code connections are allowed
 
-                // Random date in the next 7 days
-                const date = new Date()
-                date.setDate(date.getDate() + Math.floor(Math.random() * 7))
-                date.setHours(9 + Math.floor(Math.random() * 8), 0, 0, 0)
+            // Create symptoms logs for some patients
+            if (Math.random() > 0.4) {
+                const symptomDates = []
+                for (let j = 0; j < Math.floor(Math.random() * 5) + 1; j++) {
+                    const symptomDate = new Date()
+                    symptomDate.setDate(symptomDate.getDate() - Math.floor(Math.random() * 30))
+                    symptomDates.push(symptomDate)
+                }
 
-                await supabaseAdmin.from('appointments').insert({
-                    patient_id: patient.id, // Assuming user ID is used or handle properly if separate table
-                    doctor_id: randomDoctorId,
-                    appointment_date: date.toISOString(),
-                    appointment_type: randomType,
-                    status: 'scheduled',
-                    notes: 'Generated by seed'
+                for (const logDate of symptomDates) {
+                    const symptoms = {
+                        nausea: Math.random() > 0.7,
+                        vomiting: Math.random() > 0.8,
+                        fever: Math.random() > 0.7,
+                        appetiteLoss: Math.random() > 0.6,
+                        headache: Math.random() > 0.5,
+                        discharge: Math.random() > 0.6
+                    }
+
+                    await supabaseAdmin.from('symptoms_log').insert({
+                        patient_id: patient.id,
+                        log_date: logDate.toISOString().split('T')[0],
+                        symptoms: symptoms,
+                        pain_level: Math.floor(Math.random() * 6),
+                        fatigue_level: Math.floor(Math.random() * 7),
+                        bleeding: Math.random() > 0.7,
+                        notes: 'Sample symptom log entry'
+                    })
+                    symptomsCreated++
+                }
+            }
+
+            // Create screening records for some patients
+            if (Math.random() > 0.5) {
+                const screeningDate = new Date()
+                screeningDate.setDate(screeningDate.getDate() - Math.floor(Math.random() * 365))
+
+                await supabaseAdmin.from('screening_records').insert({
+                    patient_id: patient.id,
+                    screening_date: screeningDate.toISOString().split('T')[0],
+                    screening_type: ['Pap Smear', 'HPV Test', 'Colposcopy', 'Biopsy'][Math.floor(Math.random() * 4)],
+                    result: ['Normal', 'Abnormal', 'Pending'][Math.floor(Math.random() * 3)],
+                    notes: 'Sample screening record'
                 })
-                appointmentsCreated++
+                screeningsCreated++
+            }
+
+            // Don't create fake connections - patients must scan QR code to connect
+
+            // Create medical reports for some patients
+            if (Math.random() > 0.4 && allDoctorIds.length > 0) {
+                const reportTypes = [
+                    'Pap Smear Report',
+                    'HPV Test Results',
+                    'Colposcopy Report',
+                    'Biopsy Report',
+                    'Blood Test Report',
+                    'Ultrasound Report',
+                    'CT Scan Report',
+                    'Pathology Report'
+                ]
+                const fileTypes = ['application/pdf', 'image/png', 'image/jpeg']
+                
+                // Create 1-3 reports per patient
+                const numReports = Math.floor(Math.random() * 3) + 1
+                
+                for (let r = 0; r < numReports; r++) {
+                    const reportDate = new Date()
+                    reportDate.setDate(reportDate.getDate() - Math.floor(Math.random() * 180)) // Last 6 months
+                    
+                    const randomDoctorId = allDoctorIds[Math.floor(Math.random() * allDoctorIds.length)]
+                    const reportType = reportTypes[Math.floor(Math.random() * reportTypes.length)]
+                    const fileType = fileTypes[Math.floor(Math.random() * fileTypes.length)]
+                    const fileExtension = fileType === 'application/pdf' ? 'pdf' : fileType === 'image/png' ? 'png' : 'jpg'
+                    
+                    // Generate a sample file path (in real scenario, this would be uploaded to storage)
+                    const fileName = `${reportType.replace(/\s+/g, '_')}_${reportDate.toISOString().split('T')[0]}.${fileExtension}`
+                    const filePath = `${patient.user_id}/${fileName}`
+
+                    await supabaseAdmin.from('medical_reports').insert({
+                        patient_id: patient.id,
+                        doctor_id: randomDoctorId,
+                        file_name: fileName,
+                        file_path: filePath,
+                        file_type: fileType,
+                        report_type: reportType,
+                        description: `Sample ${reportType.toLowerCase()} generated for testing purposes. This is a placeholder report.`
+                    })
+                    reportsCreated++
+                }
             }
         }
     }
@@ -153,7 +270,9 @@ export async function GET() {
         success: true,
         patientsCreated: createdPatients.length,
         doctorsCreated: createdDoctors.length,
-        appointmentsCreated: appointmentsCreated,
-        message: 'Seeding complete. Default password is "password123"'
+        symptomsCreated: symptomsCreated,
+        screeningsCreated: screeningsCreated,
+        reportsCreated: reportsCreated,
+        message: 'Seeding complete. Default password is "password123" for all accounts. Note: Patients must scan doctor QR codes to connect.'
     })
 }

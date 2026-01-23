@@ -6,12 +6,9 @@ import styles from './page.module.css';
 
 export default function AppwriteTest() {
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [connectionInfo, setConnectionInfo] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        testConnection();
-    }, []);
 
     async function testConnection() {
         try {
@@ -41,12 +38,18 @@ export default function AppwriteTest() {
                 databaseAccess: dbAccess ? 'Accessible' : 'Restricted/Error'
             });
             setStatus('success');
-        } catch (err: any) {
+        } catch (err) {
             console.error('Connection error:', err);
-            setError(err.message || 'Unknown error');
+            const message = err instanceof Error ? err.message : 'Unknown error';
+            setError(message);
             setStatus('error');
         }
     }
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        testConnection();
+    }, []);
 
     return (
         <div className={styles.container}>

@@ -1,0 +1,15 @@
+'use client'
+
+import { useEffect } from 'react'
+import { useLanguage } from '@/context/LanguageContext'
+
+export default function HtmlLangUpdater() {
+    const { language } = useLanguage()
+
+    useEffect(() => {
+        // Update the HTML lang attribute
+        document.documentElement.lang = language === 'ta' ? 'ta' : 'en'
+    }, [language])
+
+    return null
+}

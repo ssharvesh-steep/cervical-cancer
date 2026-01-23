@@ -88,10 +88,12 @@ const styles = {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function AppointmentRequests({ appointments }: { appointments: any[] }) {
     const supabase = createClient()
     const router = useRouter()
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [selectedApt, setSelectedApt] = React.useState<any>(null)
     const [scheduleTime, setScheduleTime] = React.useState('')
 

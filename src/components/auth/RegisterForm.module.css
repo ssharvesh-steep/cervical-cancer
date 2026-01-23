@@ -1,6 +1,8 @@
 .form {
     width: 100%;
-    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .links {
@@ -8,7 +10,7 @@
     justify-content: center;
     align-items: center;
     gap: var(--spacing-xs);
-    margin-top: var(--spacing-md);
+    margin-top: var(--spacing-lg);
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
 }

@@ -1,15 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Link from 'next/link'
 import styles from './page.module.css'
 
-export default function EditPatientProfilePage({ params }: { params: { id: string } }) {
+export default function EditPatientProfilePage() {
     const router = useRouter()
+    const params = useParams()
     const supabase = createClient()
-    const patientUserId = params.id
+    const patientUserId = params?.id as string
 
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)

@@ -2,6 +2,8 @@
     min-height: 100vh;
     display: flex;
     background-color: #ffffff;
+    position: relative;
+    overflow-x: hidden;
 }
 
 .imageSection {
@@ -54,16 +56,19 @@
     justify-content: center;
     padding: var(--spacing-2xl);
     background-color: #ffffff;
+    overflow-y: auto;
 }
 
 .formWrapper {
     width: 100%;
-    max-width: 560px;
-    /* Wider for register form */
+    max-width: 500px;
+    /* Adjusted for register form */
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
-    margin-bottom: var(--spacing-2xl);
+    margin-bottom: var(--spacing-xl);
 }
 
 .header h1 {
@@ -85,6 +90,8 @@
     background-color: #f8fafc;
     border: 1px solid #e2e8f0;
     color: #0f172a;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .formSection :global(.form-input:focus),
@@ -92,6 +99,14 @@
     border-color: #3b82f6;
     background-color: #ffffff;
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.formSection :global(.form-group) {
+    margin-bottom: var(--spacing-md);
+}
+
+.formSection :global(.alert) {
+    margin-bottom: var(--spacing-md);
 }
 
 .formSection :global(.btn-primary) {
@@ -127,5 +142,15 @@
 
     .formSection {
         padding: var(--spacing-xl);
+        align-items: flex-start;
+        padding-top: 4rem;
+    }
+
+    .formWrapper {
+        max-width: 100%;
+    }
+
+    .header h1 {
+        font-size: 1.875rem;
     }
 }

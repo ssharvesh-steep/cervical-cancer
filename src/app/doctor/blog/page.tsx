@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { X } from 'lucide-react'
 
 export default function BlogPage() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [selectedArticle, setSelectedArticle] = useState<any>(null)
 
     const articles = [

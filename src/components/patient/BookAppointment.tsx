@@ -72,6 +72,7 @@ export default function BookAppointment({ patientId, preselectedDoctorId }: Book
 
             if (result.data) {
                 // Flatten the structure: result.data is { doctor: { ... } }[]
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 data = result.data.map((item: any) => item.doctor).filter((doc: any) => doc !== null)
             }
             error = result.error
@@ -84,7 +85,7 @@ export default function BookAppointment({ patientId, preselectedDoctorId }: Book
             }
         }
         if (error) {
-            console.error('Error loading doctors:', error)
+            console.error('Error loading doctors:', JSON.stringify(error, null, 2))
         }
         setLoading(false)
     }
@@ -140,18 +141,23 @@ export default function BookAppointment({ patientId, preselectedDoctorId }: Book
                 router.push('/patient/appointments')
                 router.refresh()
             }, 2000)
-        } catch (err: any) {
-            console.error('Booking error full object:', err)
-            console.error('Booking error message:', err.message)
-            console.error('Booking error details:', err.details)
-            console.error('Booking error hint:', err.hint)
+        } catch (err) {
+            const error = err instanceof Error ? err : new Error('Unknown error')
+            console.error('Booking error full object:', error)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            console.error('Booking error message:', (err as any).message)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            console.error('Booking error details:', (err as any).details)
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            console.error('Booking error hint:', (err as any).hint)
             console.error('Submission Data:', {
                 patientId,
                 doctorId: formData.doctorId,
                 appointmentDate: date,
                 time: '00:00:00'
             })
-            setError(`Failed to book: ${err.message || 'Unknown error'}`)
+            const message = error instanceof Error ? error.message : 'Unknown error'
+            setError(`Failed to book: ${message}`)
         } finally {
             setSubmitting(false)
         }
@@ -213,6 +219,7 @@ export default function BookAppointment({ patientId, preselectedDoctorId }: Book
                         <select
                             id="appointmentType"
                             value={formData.appointmentType}
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             onChange={(e) => setFormData({ ...formData, appointmentType: e.target.value as any })}
                             className="form-select"
                             required

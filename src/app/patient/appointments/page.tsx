@@ -22,6 +22,7 @@ export default async function PatientAppointmentsPage({
         .from('patients')
         .select('id')
         .eq('user_id', user.id)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .single() as { data: any | null }
 
     // Get appointments
@@ -32,6 +33,7 @@ export default async function PatientAppointmentsPage({
       doctor:users!appointments_doctor_id_fkey(full_name, email)
     `)
         .eq('patient_id', patientData?.id)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .order('appointment_date', { ascending: true }) as { data: any[] | null }
 
     const upcomingAppointments = appointments?.filter(apt =>

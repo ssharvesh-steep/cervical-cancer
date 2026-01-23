@@ -20,13 +20,13 @@ export default async function PatientDashboard() {
 
     if (userError || !userData) {
         // Handle case where user exists in Auth but not in public.users table
-        console.error(`User profile not found for Auth ID: ${user.id}`)
-        console.error('DB Error:', JSON.stringify(userError, null, 2))
+
         return (
             <div className={styles.container}>
                 <div className="alert alert-error" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '1rem' }}>
                     <p><strong>User Profile Missing</strong></p>
                     <p>Auth ID: <code>{user.id}</code></p>
+
                     <p>This account exists in login system but is missing database records.</p>
                     <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                         <form action="/api/auth/sync" method="POST">
@@ -51,7 +51,7 @@ export default async function PatientDashboard() {
         .maybeSingle()
 
     // Create patient record if it doesn't exist (fallback for missing trigger)
-    let safePatientId = patientData?.id
+    const safePatientId = patientData?.id
 
     if (!patientData && !patientError) {
         // Optionally insert here, or just handle null

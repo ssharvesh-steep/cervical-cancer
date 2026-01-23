@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import InstallPrompt from "@/components/shared/InstallPrompt";
 import OfflineIndicator from "@/components/shared/OfflineIndicator";
+import HtmlLangUpdater from "@/components/shared/HtmlLangUpdater";
+import { LanguageProvider } from '@/context/LanguageContext';
 
 export const metadata: Metadata = {
   title: 'Cervical Cancer Care',
@@ -31,9 +33,12 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body>
-        {children}
-        <InstallPrompt />
-        <OfflineIndicator />
+        <LanguageProvider>
+          <HtmlLangUpdater />
+          {children}
+          <InstallPrompt />
+          <OfflineIndicator />
+        </LanguageProvider>
         <script
           dangerouslySetInnerHTML={{
             __html: `

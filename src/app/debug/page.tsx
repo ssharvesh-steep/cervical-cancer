@@ -1,35 +1,61 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
 
-export default async function DebugPage() {
-    const supabase = await createClient()
+import React, { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
-    // Check auth user
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+export default function DebugPage() {
+    const [status, setStatus] = useState<any>({ loading: true })
+    const supabase = createClient()
 
-    // Check users table
-    const { data: users, error: usersError } = await supabase
-        .from('users')
-        .select('*')
-        .limit(5)
+    useEffect(() => {
+        async function checkData() {
+            const result: any = {}
 
-    // Check patients table
-    const { data: patients, error: patientsError } = await supabase
-        .from('patients')
-        .select('*')
-        .limit(5)
+            // 1. Check Auth User
+            const { data: { user }, error: authError } = await supabase.auth.getUser()
+            result.authUser = user ? { id: user.id, email: user.email, meta: user.user_metadata } : null
+            result.authError = authError
+
+            if (user) {
+                // 2. Check Public User Profile
+                const { data: profile, error: profileError } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('id', user.id)
+                    .single()
+
+                result.publicProfile = profile
+                result.profileError = profileError
+
+                // 3. Check Patient Record
+                const { data: patient, error: patientError } = await supabase
+                    .from('patients')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single()
+
+                result.patientRecord = patient
+                result.patientError = patientError
+            }
+
+            setStatus(result)
+        }
+
+        checkData()
+    }, [supabase])
 
     return (
         <div style={{ padding: '2rem', fontFamily: 'monospace' }}>
-            <h1>Debug Information</h1>
-
-            <h2>Auth User</h2>
-            <pre>{JSON.stringify({ user, authError }, null, 2)}</pre>
-
-            <h2>Users Table (First 5)</h2>
-            <pre>{JSON.stringify({ users, usersError }, null, 2)}</pre>
-
-            <h2>Patients Table (First 5)</h2>
-            <pre>{JSON.stringify({ patients, patientsError }, null, 2)}</pre>
+            <h1>Debug Info</h1>
+            <pre style={{ background: '#f4f4f5', padding: '1rem', borderRadius: '8px', overflow: 'auto' }}>
+                {JSON.stringify(status, null, 2)}
+            </pre>
+            <button
+                onClick={() => window.location.reload()}
+                style={{ marginTop: '1rem', padding: '0.5rem 1rem', background: 'blue', color: 'white', border: 'none', borderRadius: '4px' }}
+            >
+                Refresh
+            </button>
         </div>
     )
 }

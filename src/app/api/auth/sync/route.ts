@@ -64,10 +64,11 @@ export async function POST() {
         }
 
         return NextResponse.json({ success: true, message: 'Profile synced successfully' })
-    } catch (error: any) {
+    } catch (error) {
         console.error('Profile sync error:', error)
+        const message = error instanceof Error ? error.message : 'Failed to sync profile'
         return NextResponse.json({
-            error: error.message || 'Failed to sync profile'
+            error: message
         }, { status: 500 })
     }
 }

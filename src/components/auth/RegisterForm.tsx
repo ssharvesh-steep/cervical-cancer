@@ -4,11 +4,13 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signUp } from '@/lib/supabase-auth'
 import styles from './RegisterForm.module.css'
+import { useLanguage } from '@/context/LanguageContext'
 
 type UserRole = 'doctor' | 'patient'
 
 export default function RegisterForm() {
     const router = useRouter()
+    const { t } = useLanguage()
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
@@ -22,9 +24,13 @@ export default function RegisterForm() {
     const [loading, setLoading] = useState(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const value = e.target.name === 'password' || e.target.name === 'confirmPassword'
+            ? e.target.value.trim() // Trim passwords to avoid whitespace issues
+            : e.target.value;
+
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value,
+            [e.target.name]: value,
         })
     }
 
@@ -33,14 +39,34 @@ export default function RegisterForm() {
         setError('')
         setSuccess(false)
 
+        // Trim all fields
+        const trimmedData = {
+            fullName: formData.fullName.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim(),
+            password: formData.password.trim(),
+            confirmPassword: formData.confirmPassword.trim(),
+            role: formData.role
+        };
+
         // Validation
-        if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match')
+        if (!trimmedData.fullName) {
+            setError(t('auth.errors.fullNameRequired') || 'Full name is required')
             return
         }
 
-        if (formData.password.length < 6) {
-            setError('Password must be at least 6 characters')
+        if (!trimmedData.email) {
+            setError(t('auth.errors.emailRequired') || 'Email is required')
+            return
+        }
+
+        if (trimmedData.password !== trimmedData.confirmPassword) {
+            setError(t('auth.errors.passwordsNotMatch'))
+            return
+        }
+
+        if (trimmedData.password.length < 6) {
+            setError(t('auth.errors.passwordTooShort') || 'Password must be at least 6 characters')
             return
         }
 
@@ -48,18 +74,18 @@ export default function RegisterForm() {
 
         try {
             const result = await signUp({
-                email: formData.email,
-                password: formData.password,
-                fullName: formData.fullName,
-                role: formData.role,
-                phone: formData.phone || undefined,
+                email: trimmedData.email,
+                password: trimmedData.password,
+                fullName: trimmedData.fullName,
+                role: trimmedData.role,
+                phone: trimmedData.phone || undefined,
             })
 
             setSuccess(true)
 
             // Check if email confirmation is required
             if (result.user && !result.user.confirmed_at) {
-                setError('Please check your email to confirm your account before logging in.')
+                setError(t('auth.errors.emailConfirmationRequired'))
             } else {
                 // Auto redirect after 2 seconds
                 setTimeout(() => {
@@ -67,7 +93,9 @@ export default function RegisterForm() {
                 }, 2000)
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to create account')
+            console.error('Registration error:', err);
+            const errorMessage = err instanceof Error ? err.message : t('auth.errors.accountCreationFailed');
+            setError(errorMessage)
         } finally {
             setLoading(false)
         }
@@ -77,7 +105,7 @@ export default function RegisterForm() {
         <form onSubmit={handleSubmit} className={styles.form}>
             <div className="form-group">
                 <label htmlFor="role" className="form-label">
-                    I am a <span style={{ color: 'var(--color-error)' }}>*</span>
+                    {t('auth.role')} <span style={{ color: 'var(--color-error)' }}>*</span>
                 </label>
                 <select
                     id="role"
@@ -88,14 +116,14 @@ export default function RegisterForm() {
                     required
                     disabled={loading}
                 >
-                    <option value="patient">Patient</option>
-                    <option value="doctor">Doctor</option>
+                    <option value="patient">{t('auth.patient')}</option>
+                    <option value="doctor">{t('auth.doctor')}</option>
                 </select>
             </div>
 
             <div className="form-group">
                 <label htmlFor="fullName" className="form-label">
-                    Full Name <span style={{ color: 'var(--color-error)' }}>*</span>
+                    {t('auth.fullName')} <span style={{ color: 'var(--color-error)' }}>*</span>
                 </label>
                 <input
                     id="fullName"
@@ -104,7 +132,7 @@ export default function RegisterForm() {
                     value={formData.fullName}
                     onChange={handleChange}
                     className="form-input"
-                    placeholder="Enter your full name"
+                    placeholder={t('auth.fullName')}
                     required
                     disabled={loading}
                 />
@@ -112,7 +140,7 @@ export default function RegisterForm() {
 
             <div className="form-group">
                 <label htmlFor="email" className="form-label">
-                    Email Address <span style={{ color: 'var(--color-error)' }}>*</span>
+                    {t('auth.email')} <span style={{ color: 'var(--color-error)' }}>*</span>
                 </label>
                 <input
                     id="email"
@@ -129,7 +157,7 @@ export default function RegisterForm() {
 
             <div className="form-group">
                 <label htmlFor="phone" className="form-label">
-                    Phone Number
+                    {t('auth.phone')}
                 </label>
                 <input
                     id="phone"
@@ -145,7 +173,7 @@ export default function RegisterForm() {
 
             <div className="form-group">
                 <label htmlFor="password" className="form-label">
-                    Password <span style={{ color: 'var(--color-error)' }}>*</span>
+                    {t('auth.password')} <span style={{ color: 'var(--color-error)' }}>*</span>
                 </label>
                 <input
                     id="password"
@@ -154,7 +182,7 @@ export default function RegisterForm() {
                     value={formData.password}
                     onChange={handleChange}
                     className="form-input"
-                    placeholder="At least 6 characters"
+                    placeholder={t('auth.password')}
                     required
                     disabled={loading}
                     minLength={6}
@@ -163,7 +191,7 @@ export default function RegisterForm() {
 
             <div className="form-group">
                 <label htmlFor="confirmPassword" className="form-label">
-                    Confirm Password <span style={{ color: 'var(--color-error)' }}>*</span>
+                    {t('auth.confirmPassword')} <span style={{ color: 'var(--color-error)' }}>*</span>
                 </label>
                 <input
                     id="confirmPassword"
@@ -172,7 +200,7 @@ export default function RegisterForm() {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     className="form-input"
-                    placeholder="Re-enter your password"
+                    placeholder={t('auth.confirmPassword')}
                     required
                     disabled={loading}
                     minLength={6}
@@ -181,7 +209,7 @@ export default function RegisterForm() {
 
             {success && (
                 <div className="alert alert-success" role="alert">
-                    ✅ Account created successfully! {error ? '' : 'Redirecting to login...'}
+                    ✅ {t('auth.success.accountCreated')} {error ? '' : t('auth.success.redirecting')}
                 </div>
             )}
 
@@ -200,17 +228,17 @@ export default function RegisterForm() {
                 {loading ? (
                     <>
                         <span className="spinner"></span>
-                        Creating account...
+                        {t('auth.buttons.creating')}
                     </>
                 ) : (
-                    'Create Account'
+                    t('auth.buttons.create')
                 )}
             </button>
 
             <div className={styles.links}>
-                <span>Already have an account?</span>
+                <span>{t('auth.haveAccount')}</span>
                 <a href="/login" className={styles.link}>
-                    Sign in
+                    {t('auth.buttons.signIn')}
                 </a>
             </div>
         </form>

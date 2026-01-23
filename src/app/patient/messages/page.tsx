@@ -44,6 +44,7 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
     const uniqueDoctorsMap = new Map()
 
     // Add from appointments
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     appointmentDoctors?.forEach((app: any) => {
         if (app.doctor && app.doctor.id !== user.id) {
             uniqueDoctorsMap.set(app.doctor.id, app.doctor)
@@ -51,6 +52,7 @@ export default async function PatientMessagesPage({ searchParams }: PageProps) {
     })
 
     // Add from messages
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     messageInteractions?.forEach((msg: any) => {
         // If current user is sender, add receiver (doctor)
         if (msg.sender_id === user.id && msg.receiver && msg.receiver.id !== user.id) {

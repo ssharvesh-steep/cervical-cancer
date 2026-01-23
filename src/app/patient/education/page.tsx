@@ -5,6 +5,7 @@ import styles from './page.module.css'
 import { X } from 'lucide-react'
 
 export default function PatientEducationPage() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [selectedArticle, setSelectedArticle] = useState<any>(null)
 
     const articles = [

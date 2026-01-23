@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 
 export default function InstallPrompt() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
     const [showPrompt, setShowPrompt] = useState(false);
 
@@ -52,6 +53,7 @@ export default function InstallPrompt() {
             const dismissedTime = parseInt(dismissed);
             const daysSinceDismissed = (Date.now() - dismissedTime) / (1000 * 60 * 60 * 24);
             if (daysSinceDismissed < 7) {
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setShowPrompt(false);
             }
         }

@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { MoreVertical } from 'lucide-react'
 
 // Simple table styles
@@ -61,12 +62,13 @@ const styles = {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function RecentPatients({ patients }: { patients: any[] }) {
     return (
         <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '1.5rem', marginTop: '2rem' }}>
             <div style={styles.header}>
                 <h3 style={styles.title}>Recent Patients</h3>
-                <a href="/doctor/patients" style={styles.link}>View All &gt;</a>
+                <Link href="/doctor/patients" style={styles.link}>View All &gt;</Link>
             </div>
 
             <div style={{ overflowX: 'auto' }}>
