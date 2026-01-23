@@ -103,8 +103,8 @@ export default function EditProfilePage() {
             router.push('/patient/profile')
             router.refresh()
         } catch (error) {
-            console.error('Error updating profile:', error)
-            alert('Failed to update profile. Please try again.')
+            console.error('Error updating profile:', JSON.stringify(error, null, 2), error)
+            alert(`Failed to update profile: ${(error as Error).message || 'Unknown error'}`)
         } finally {
             setSaving(false)
         }
